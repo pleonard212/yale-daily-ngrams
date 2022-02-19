@@ -88,16 +88,22 @@ for file_desc in glob.glob('./YaleDailyNews/YaleDailyNews/**/index.desc', recurs
         for existing_dir in glob.glob(os.path.join(duplicates_base, normalized_academic_year,(isodate + '*'))):
             issue_count.append(existing_dir[-2:])
             print('Found issue ' + existing_dir[-2:] )
-        highest_issue_count = max(issue_count)
-        print('Highest issue is ' +  highest_issue_count)
+        try:
+            highest_issue_count = max(issue_count)
+        except:
+            highest_issue_count = 0
+        print('Highest issue is ' +  str(highest_issue_count))
         new_issue_count = int(highest_issue_count) + 1
         print('Creating issue ' + str(new_issue_count))
         dupedir_to_create = os.path.join(duplicates_base, normalized_academic_year)
-        print('Moving ' +  full_dirlocation + ' to ' + os.path.join(dupedir_to_create,(isodate + '_' + str(new_issue_count))))
+        normalized_duplicatedestination = os.path.join(dupedir_to_create,(isodate + '_' + str(new_issue_count).zfill(2)))
+        print('Moving ' +  full_dirlocation + ' to ' + normalized_duplicatedestination)
         if not os.path.exists(os.path.join(dupedir_to_create)):
             print('Creating ' + dupedir_to_create)
             os.makedirs(dupedir_to_create)
-
-        exit()
-        
+        print('doing a duplicates move')
+        shutil.move(full_dirlocation, normalized_duplicatedestination)
+    else:
+        print('doing a normal move')
+        shutil.move(full_dirlocation, normalized_destination)
 
